@@ -1,51 +1,57 @@
 # Support Ticket Dashboard
 
-React + Vite + Tailwind CSS v4, no extra UI libraries.
+A small support ticket dashboard built with React (Vite) and Tailwind CSS v4.
+Tickets are loaded from a mock async API that lives in the same project.
 
-## Run
+## Run the app
 
-npm install
-npm run dev
+    npm install
+    npm run dev
 
 Open the URL shown in the terminal (usually http://localhost:5173).
+Live demo: [<your-vercel-link>](https://ticket-dashboard-chi-ten.vercel.app/)
 
 ## Reproduce the failed save
 
 The mock API (`src/api/ticketsApi.js`) always fails the **first** save
-attempt after the page loads.
+attempt after the page loads. Later saves succeed.
 
-1. Load (or refresh) the page.
+1. Load or refresh the page.
 2. Change any ticket's status, e.g. #101 Open -> Resolved.
-3. An error appears with a Retry button, and the ticket still shows its
-   last saved status (Open).
+3. An error message with a Retry button appears.
+4. The ticket still shows its last saved status (Open) in both the dropdown
+   and the badge.
 
 ## Verify the retry
 
-1. Click Retry.
+1. Click **Retry**.
 2. The ticket now shows the new status (Resolved) and a success message.
-3. Switch the filter: the ticket appears under "Resolved" and is gone from
-   "Open". If a filter has no tickets, a "No tickets with status ..." message shows.
+3. Set the filter to "Open": #101 is gone and a "No tickets with status
+   'Open'" message appears. Set it to "Resolved": #101 and #103 are listed.
 
-Refreshing the page resets the counter, so the first save fails again.
+Refreshing the page resets the mock API, so the first save fails again.
 
-## Notes
+## Features
 
-- Dropdown value always comes from the last saved status, so a failed
-  save never shows an unsaved value.
-- If you change a ticket's status while a filter is active, it may
-  leave that filtered list. This is expected.
-- Keyboard: Tab to controls, use arrow keys / Enter / Space on selects
-  and Enter / Space on the Retry button.
+- Mock async API with a loading state
+- Filter by status, with an empty-state message
+- Change status from the list
+- Failed save: error shown, last saved status kept, retry available
+- Keyboard usable: Tab to controls, arrow keys on selects, Enter/Space on
+  the Retry button. Visible focus rings, labelled controls, `role="status"`
+  and `role="alert"` for announcements
+
+## Design decisions
+
+- The status dropdown and badge always read from the last *saved* status.
+  The ticket list is only updated after the API call succeeds, so a failed
+  save can never show an unsaved value.
+- The filtered list is derived from `tickets` + `filter` (not stored in
+  state), so after a successful retry it updates automatically.
+- Saving happens only in event handlers, not in effects, so React
+  StrictMode cannot trigger an extra save.
+- Per-ticket save state (`saving`, `error`, `pendingStatus`) lets Retry
+  re-send the exact status the user tried to set.
 
 ## AI usage
-
-(Likhna: tumne AI kis kaam ke liye use kiya, e.g. code structure ya README
-draft, aur tumne khud kya test kiya, e.g. manual test of fail/retry/filter
-flow aur keyboard navigation.)
-
-## What I would do next
-
-- Unit tests for the fail-then-retry flow
-- Per-ticket "first save fails" option
-- Move focus to a sensible place after a ticket leaves a filtered list
-- Better styling
+I used an AI assistant (Claude) for: Error handling and and refining the UI styling to ensure a smoother and more consistent user experience.
