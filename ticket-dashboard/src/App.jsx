@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchTickets, updateTicketStatus } from "./api/ticketsApi";
+import { fetchTickets, updateTicketStatus } from "./api/ticketsApi.js";
 import TicketList from "./components/TicketList.jsx";
 
 const FILTERS = ["All", "Open", "In progress", "Resolved"];
@@ -9,7 +9,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [filter, setFilter] = useState("All");
-  // { [id]: { saving, error, pendingStatus } }
   const [saveState, setSaveState] = useState({});
   const [notice, setNotice] = useState("");
 
