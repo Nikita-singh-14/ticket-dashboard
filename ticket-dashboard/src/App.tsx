@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { fetchTickets, updateTicketStatus } from "./api/ticketsApi.js";
-import TicketRow from "./components/TicketList.jsx";
-import "./App.css";
+import { fetchTickets, updateTicketStatus } from "./api/ticketsApi";
+import TicketList from "./components/TicketList.jsx";
 
 const FILTERS = ["All", "Open", "In progress", "Resolved"];
 
@@ -10,6 +9,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState(null);
   const [filter, setFilter] = useState("All");
+  // { [id]: { saving, error, pendingStatus } }
   const [saveState, setSaveState] = useState({});
   const [notice, setNotice] = useState("");
 
@@ -58,17 +58,21 @@ function App() {
     filter === "All" ? tickets : tickets.filter((t) => t.status === filter);
 
   return (
-    <main className="app">
-      <h1>Support Tickets</h1>
-      <h1>Support Tickets</h1>
-      <p className="subtitle">Review tickets and update their status.</p>
+    <main className="mx-auto my-10 max-w-3xl px-4">
+      <h1 className="text-3xl font-bold text-slate-900">Support Tickets</h1>
+      <p className="mb-6 mt-1 text-slate-500">
+        Review tickets and update their status.
+      </p>
 
-      <div className="filter">
-        <label htmlFor="filter">Filter by status</label>
+      <div className="mb-5 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
+        <label htmlFor="filter" className="font-semibold">
+          Filter by status
+        </label>
         <select
           id="filter"
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
+          className="cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-1.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
         >
           {FILTERS.map((f) => (
             <option key={f} value={f}>
@@ -78,26 +82,36 @@ function App() {
         </select>
       </div>
 
-      <p className="visually-hidden" role="status">
+      <p className="sr-only" role="status">
         {notice}
       </p>
-      {notice && <p className="success">{notice}</p>}
+      {notice && (
+        <p className="mb-4 rounded-lg border border-green-300 bg-green-50 px-3 py-2 text-green-800">
+          {notice}
+        </p>
+      )}
 
       {loading && (
-        <p role="status" className="state-msg">
-          <span className="spinner" aria-hidden="true" /> Loading tickets...
+        <p role="status" className="flex items-center gap-2 text-slate-500">
+          <span
+            aria-hidden="true"
+            className="size-4 animate-spin rounded-full border-[3px] border-slate-200 border-t-blue-700 motion-reduce:animate-none"
+          />
+          Loading tickets...
         </p>
       )}
       {loadError && <p role="alert">{loadError}</p>}
 
       {!loading && !loadError && visible.length === 0 && (
-        <p className="empty">No tickets with status "{filter}".</p>
+        <p className="rounded-xl border-2 border-dashed border-slate-300 bg-white px-4 py-8 text-center text-slate-500">
+          No tickets with status "{filter}".
+        </p>
       )}
 
       {!loading && visible.length > 0 && (
-        <ul className="ticket-list">
+        <ul className="grid gap-3">
           {visible.map((ticket) => (
-            <TicketRow
+            <TicketList
               key={ticket.id}
               ticket={ticket}
               state={saveState[ticket.id]}

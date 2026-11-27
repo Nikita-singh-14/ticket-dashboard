@@ -1,6 +1,6 @@
 # Support Ticket Dashboard
 
-React + Vite app with a mock async API.
+React + Vite + Tailwind CSS v4, no extra UI libraries.
 
 ## Run
 
