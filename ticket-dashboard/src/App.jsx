@@ -60,7 +60,7 @@ function App() {
     <main className="mx-auto my-10 max-w-3xl px-4">
       <h1 className="text-3xl font-bold text-slate-900">Support Tickets</h1>
       <p className="mb-6 mt-1 text-slate-500">
-        Review tickets and update their status.
+        Review tickets and update their status
       </p>
 
       <div className="mb-5 flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm">
